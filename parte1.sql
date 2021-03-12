@@ -247,21 +247,19 @@ NULL )
 
 
 ----------------------------------------------6-----------------------------------------------
-CREATE ROLE PRUEBA_2;
+CREATE ROLE RESERVA;
 SPOOL otorgar_permisos.sql
-SELECT 'GRANT SELECT,INSERT, DELETE, UPDATE ON "' || OBJ.object_name || '" TO PRUEBA_2;'
+SELECT 'GRANT SELECT, INSERT, DELETE, UPDATE ON '|| OBJ.object_name ||'  TO RESERVA;'
 FROM   USER_OBJECTS OBJ
-WHERE  OBJ.object_type = 'TABLE'
-AND NOT EXISTS (SELECT '1'
-                   FROM all_tab_privs PRIV
-                   WHERE PRIV.grantee = 'PRUEBA_2'
-                   AND PRIV.privilege NOT IN('SELECT', 'INSERT','DELETE','UPDATE')
-                   AND PRIV.table_name = OBJ.object_name);
+WHERE  OBJ.object_type = 'TABLE';
+--AND NOT EXISTS (SELECT '1'
+--                   FROM all_tab_privs PRIV
+--                   WHERE PRIV.grantee = 'PRUEBA_2'
+--                   AND PRIV.privilege NOT IN('SELECT', 'INSERT','DELETE','UPDATE')
+--                   AND PRIV.table_name = OBJ.object_name);
 SPOOL OFF
-
-
 --@otorgar_permisos.sql
 --PARA VER LOS PRIVILEGIOS
---SELECT * FROM ROLE_TAB_PRIVS WHERE ROLE = 'PRUEBA_2';
+--SELECT * FROM ROLE_TAB_PRIVS WHERE ROLE = 'RESERVA';
   
   
