@@ -116,3 +116,17 @@ BEGIN
 	CODIGO_HUESPED
 END;
 
+/*OBJETOS*/
+/*a) Cree el tipo T_OCUPANTE como un objeto con los siguientes elementos:*/
+CREATE OR REPLACE TYPE T_OCUPANTE IS OBJECT 
+(
+	TIPO_DOCUMENTO VARCHAR2(100),
+	NUM_DOCUMENTO VARCHAR2(100), 
+	NOMBRE VARCHAR2(100), 
+	APELLIDO VARCHAR2(100)
+);
+
+/*b)	El tipo tabla TAB_OCUPANTES del TIPO T_OCUPANTE*/
+CREATE TABLE TAB_OCUPANTES OF T_OCUPANTE;
+
+/*c) Cree el tipo T_HABITACIÓN como un objeto con los siguientes elementos */
