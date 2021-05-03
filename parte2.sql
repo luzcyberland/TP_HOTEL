@@ -80,22 +80,8 @@ END;
 /*------------------------------------------*/
 
 
-El procedimiento P_FACTURAR emitirá automáticamente la facturación 
-para todas las habitaciones cuya reserva vence en el día, a partir de la vista V_CARGOS_HUESPEDES.
-La factura tendrá
-
-
-
-
-
-CREATE OR REPLACE PROCEDURE P_FACTURAR
-IS
-BEGIN
-END P_FACTURAR;
-
-listo xd 
-oki
-/*pruebaaaa*/
+/*El procedimiento P_FACTURAR emitirá automáticamente la facturación 
+para todas las habitaciones cuya reserva vence en el día, a partir de la vista V_CARGOS_HUESPEDES.*/
 
 
 CREATE O REPLACE P_FACTURAR IS
