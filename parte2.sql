@@ -82,19 +82,16 @@ END;
 
 /*El procedimiento P_FACTURAR emitirá automáticamente la facturación 
 para todas las habitaciones cuya reserva vence en el día, a partir de la vista V_CARGOS_HUESPEDES.*/
-
-SELECT * FROM TIMBRADO;
-
 CREATE O REPLACE PROCEDURE P_FACTURAR()
 AS
 v_codigo 			NUMBER(8);
 v_ numero_factura	NUMBER(8);
-v_monto  			NUMBER(9);--CREAR VARIABLES
+v_costo			 	NUMBER(9);
+v_monto_gravado		NUMBER(9);
+v_monto  			NUMBER(9);
 v_monto_execto		NUMBER(9);
 v_iva				NUMBER(9);
 v_monto_iva			NUMBER(9);
-v_costo			 	NUMBER(9);
-v_monto_gravado		NUMBER(9);
 v_codigo_huesped	NUMBER(9);
 
 BEGIN
@@ -111,24 +108,22 @@ BEGIN
 	    JOIN PRODUCTO_SERVICIO PS
 	    ON CR.ID_PROD_SERV = PS.ID
     	WHERE CR.CODIGO_FACTURA IS NOT NULL AND PS.PORC_IVA <> 0;
+    
+    --COSTO HABITACIÓN
+	SELECT SUM(COSTO_HABITACION) INTO v_costo FROM V_CARGOS_HUESPEDES;
+    
 
+	--MONTO_GRAVADO
+	v_monto_gravado:= (v_costo - (v_costo/11) + (v_monto +(v_monto//*ESTEEEEEE*/));
+	
+    
     --MONTO_EXENTO
     SELECT SUM(C.PRECIO_UNITARIO*CANTIDAD) INTO v_monto_exento FROM CARGO_RESERVA CR 
 		JOIN PRODUCTO_SERVICIO PS
 		ON CR.ID_PROD_SERV = PS.ID	
 		WHERE CR.CODIGO_FACTURA IS NOT NULL AND PS.PORC_IVA <> 0;
 	
-	
-	--IVA VERIFICARRRRRRRRR
-	SELECT SUM(CASE 
-			WHEN PORC_IVA = 10 THEN v_monto / 11
-			WHEN PORC_IVA = 5 THEN v_monto / 21
-			ELSE 0
-		END) INTO v_iva FROM FACTURA_VENTA;
-  
-    --COSTO HABITACIÓN
-	SELECT SUM(COSTO_HABITACION) INTO FROM V_CARGOS_HUESPEDES;
-    
+	    
 	--MONTO_GRAVADO
 	v_monto_gravado:= (v_costo - (costo/11)+ (v_monto +(v_monto/v_iva));
 	
@@ -141,6 +136,28 @@ BEGIN
 	VALUES (v_codigo,sysdate,sysdate,v_numero_factura,)
 END;
 
+
+
+
+
+CREATE OR REPLACE PROCEDURE P_ALTERAR_TABLA(PTAB VARCHAR2, PCOL VARCHAR2,
+											PTIPO VARCHAR2, PLONG NUMBER DEFAULT 1)
+IS
+	V_SENTENCIA VARCHAR2(1000);
+BEGIN
+	V_SENTENCIA := 'ALTER TABLE '||PTAB|| ' ADD ('||PCOL||' ' ||PTIPO;
+	IF PTIPO IN ('DATE', 'CLOB','BLOB','FLOB') THEN
+	V_SENTENCIA := V_SENTENCIA ||')';
+	ELSE
+		V_SENTENCIA:= V_SENTENCIA ||'('||PLONG||'))';
+	END IF;
+	DBMS_OUTPUT.PUT_LINE(RTRIM(V_SENTENCIA));
+	EXECUTE INMEDIATE V_SENTENCIA;
+	EXCEPTION
+		WHEN OTHERS THEN
+		DBMS_OUTPUT.PUT_LINE(SQLERRM);
+END;
+		
 
 
 
